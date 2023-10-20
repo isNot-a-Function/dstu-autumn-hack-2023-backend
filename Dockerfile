@@ -13,6 +13,6 @@ RUN yarn generate:prisma
 
 RUN NODE_OPTIONS="--max-old-space-size=2048" yarn build
 
-EXPOSE 3000
+EXPOSE 5100
 
 CMD ["yarn", "start"]
