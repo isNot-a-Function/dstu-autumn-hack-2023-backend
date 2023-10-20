@@ -1,0 +1,52 @@
+{
+  "name": "project-hub-api-service",
+  "version": "0.0.1",
+  "description": "Project Hub API Service",
+  "main": "index.ts",
+  "repository": "git@github.com:NikkoDevelop/project-hub-api-service.git",
+  "author": "Nikko Dev <nick.max.kovaly@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "dev": "tsnd --respawn ./src/index.ts",
+    "seed": "tsnd ./src/seed.ts",
+    "generate:prisma": "prisma generate",
+    "migrate:up": "npx prisma migrate deploy",
+    "migrate:dev": "npx prisma migrate dev"
+  },
+  "devDependencies": {
+    "@atomix/eslint-config": "^8.0.0",
+    "@commitlint/cli": "^17.7.1",
+    "@commitlint/config-conventional": "^17.7.0",
+    "@types/bcrypt": "^5.0.0",
+    "@types/jsonwebtoken": "^9.0.2",
+    "@types/node": "^20.5.3",
+    "@typescript-eslint/eslint-plugin": "^6.4.1",
+    "@typescript-eslint/parser": "^6.4.1",
+    "eslint": "^8.47.0",
+    "eslint-config-standard-with-typescript": "^39.1.0",
+    "eslint-plugin-import-newlines": "^1.3.4",
+    "eslint-plugin-n": "^16.0.2",
+    "eslint-plugin-perfectionist": "^2.1.0",
+    "eslint-plugin-promise": "^6.1.1",
+    "eslint-plugin-sonarjs": "^0.21.0",
+    "prisma": "^5.2.0",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.1.6"
+  },
+  "dependencies": {
+    "@fastify/cookie": "^9.0.4",
+    "@fastify/cors": "^8.3.0",
+    "@fastify/multipart": "^8.0.0",
+    "@prisma/client": "^5.2.0",
+    "aws-sdk": "^2.1468.0",
+    "bcrypt": "^5.1.1",
+    "cuid": "^3.0.0",
+    "deep-email-validator": "^0.1.21",
+    "fastify": "^4.21.0",
+    "jsonwebtoken": "^9.0.2",
+    "winston": "^3.10.0",
+    "winston-daily-rotate-file": "^4.7.1",
+    "zod": "^3.22.2"
+  }
+}
