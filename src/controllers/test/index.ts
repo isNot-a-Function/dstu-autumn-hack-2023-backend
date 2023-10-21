@@ -44,21 +44,21 @@ export const StartChatingController = async (
 
     const data = CreateTestSchema.parse(req.body);
 
-    const newGroup = await prisma.test.create({
-      data: {
-        title: data.title,
-        tasks: {
-          connect: {
-            id: 
-          }
-        }
-      },
-    });
+    // const newGroup = await prisma.test.create({
+    //   data: {
+    //     title: data.title,
+    //     tasks: {
+    //       connect: {
+    //         id:
+    //       }
+    //     }
+    //   },
+    // });
 
     reply
       .status(SuccessReply.DataSendSuccessStatus)
       .send({
-        group: newGroup,
+        // group: newGroup,
       });
   } catch (error) {
     if (error instanceof ZodError) {
