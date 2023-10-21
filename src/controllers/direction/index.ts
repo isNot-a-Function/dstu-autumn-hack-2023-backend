@@ -1,56 +1,42 @@
-import { FastifyRequest, FastifyReply } from 'fastify';
+import { FastifyReply, FastifyRequest } from 'fastify';
 import { ZodError } from 'zod';
 
-import prisma from '../../prisma';
-
-import { verifyAccessToken } from '../../integrations/jwt';
 import { logger } from '../../log';
+import prisma from '../../prisma';
 
 import { SuccessReply } from '../../reply/success.reply';
 import { ErrorReply } from '../../reply/error.reply';
-import { IGetUser, IUpdateUser } from './interface';
-import { GetUserSchema, UpdateUserSchema } from './validation';
 
-export const UpdateUserController = async (
-  req: FastifyRequest<{ Body: IUpdateUser }>,
+import { verifyAccessToken } from '../../integrations/jwt';
+import { IGetDirectionsBySpecialization, IGetOneDirection } from './interface';
+import { GetDirectionsBySpecializationSchema, GetOneDirectionSchema } from './validator';
+
+export const GetDirectionsBySpecializationController = async (
+  req: FastifyRequest<{ Querystring: IGetDirectionsBySpecialization }>,
   reply: FastifyReply,
 ) => {
   try {
-    if (!req.headers.authorization) {
-      reply
-        .status(ErrorReply.TokenIsNotExistErrorStatus);
+    const data = GetDirectionsBySpecializationSchema.parse(req.query);
 
-      return;
-    }
-
-    const user = verifyAccessToken(req.headers.authorization);
-
-    if (typeof user === 'string') {
-      reply
-        .status(ErrorReply.TokenIsInvalidErrorStatus);
-
-      return;
-    }
-
-    const data = UpdateUserSchema.parse(req.body);
-
-    const updatedUser = await prisma.user.update({
-      data: {
-        fullname: data.fullname,
-        logo: data.logo,
-        phone: data.phone,
-        tgLink: data.tgLink,
-        vkLink: data.vkLink,
+    const directions = await prisma.direction.findMany({
+      include: {
+        specialization: true,
       },
       where: {
-        id: user.userId,
+        specialization: data.specialization
+          ? {
+            title: data.specialization,
+          }
+          : undefined,
+        type: data.type,
       },
+
     });
 
     reply
       .status(SuccessReply.DataSendSuccessStatus)
       .send({
-        user: updatedUser,
+        directions,
       });
   } catch (error) {
     if (error instanceof ZodError) {
@@ -71,7 +57,47 @@ export const UpdateUserController = async (
   };
 };
 
-export const GetMeController = async (
+export const GetOneDirectionController = async (
+  req: FastifyRequest<{ Params: IGetOneDirection }>,
+  reply: FastifyReply,
+) => {
+  try {
+    const data = GetOneDirectionSchema.parse(req.params);
+
+    const direction = await prisma.direction.findUnique({
+      include: {
+        specialization: true,
+      },
+      where: {
+        id: Number(data.directionId),
+      },
+    });
+
+    reply
+      .status(SuccessReply.DataSendSuccessStatus)
+      .send({
+        direction,
+      });
+  } catch (error) {
+    if (error instanceof ZodError) {
+      logger.error(error.message);
+
+      reply
+        .status(ErrorReply.ValidationErrorStatus)
+        .send(ErrorReply.ValidationErrorMessage);
+    }
+
+    if (error instanceof Error) {
+      logger.error(error.message);
+
+      reply
+        .status(ErrorReply.BaseErrorStatus)
+        .send(error.message);
+    }
+  };
+};
+
+export const GetMyDirectionsController = async (
   req: FastifyRequest,
   reply: FastifyReply,
 ) => {
@@ -93,8 +119,16 @@ export const GetMeController = async (
     }
 
     const data = await prisma.user.findUnique({
+      select: {
+        responses: {
+          include: {
+            answers: true,
+            tests: true,
+          },
+        },
+      },
       where: {
-        id: user.userId,
+        id: Number(user.userId),
       },
     });
 
@@ -102,43 +136,6 @@ export const GetMeController = async (
       .status(SuccessReply.DataSendSuccessStatus)
       .send({
         user: data,
-      });
-  } catch (error) {
-    if (error instanceof ZodError) {
-      logger.error(error.message);
-
-      reply
-        .status(ErrorReply.ValidationErrorStatus)
-        .send(ErrorReply.ValidationErrorMessage);
-    }
-
-    if (error instanceof Error) {
-      logger.error(error.message);
-
-      reply
-        .status(ErrorReply.BaseErrorStatus)
-        .send(error.message);
-    }
-  };
-};
-
-export const GetUserController = async (
-  req: FastifyRequest<{ Params: IGetUser }>,
-  reply: FastifyReply,
-) => {
-  try {
-    const data = GetUserSchema.parse(req.params);
-
-    const user = await prisma.user.findUnique({
-      where: {
-        id: Number(data.userId),
-      },
-    });
-
-    reply
-      .status(SuccessReply.DataSendSuccessStatus)
-      .send({
-        user,
       });
   } catch (error) {
     if (error instanceof ZodError) {

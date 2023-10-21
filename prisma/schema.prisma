@@ -35,6 +35,7 @@ model Specialization {
 model Direction {
   id               Int            @id @default(autoincrement())
   createdAt        DateTime       @default(now())
+  type             DirectionType?
   title            String
   description      String
   responses        Response[]
@@ -66,8 +67,8 @@ model Test {
 model Task {
   id                    Int      @id @default(autoincrement())
   createdAt             DateTime @default(now())
-  test                  Test     @relation(fields: [testId], references: [id])
-  testId                Int
+  test                  Test?    @relation(fields: [testId], references: [id])
+  testId                Int?
   type                  TaskType
   question              String
   correctSingleAnswer   Int?
@@ -117,4 +118,9 @@ enum TaskType {
   multipleResponse
   detailedResponse
   codeResponse
+}
+
+enum DirectionType {
+  internship
+  practice
 }

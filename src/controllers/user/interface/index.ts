@@ -5,3 +5,7 @@ export interface IUpdateUser {
   fullname?: string;
   logo?: string;
 }
+
+export interface IGetUser {
+  userId: string
+}

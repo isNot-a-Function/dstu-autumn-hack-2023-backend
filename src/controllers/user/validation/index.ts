@@ -17,3 +17,9 @@ export const UpdateUserSchema = z.object({
     .string()
     .optional(),
 }).strict();
+
+export const GetUserSchema = z.object({
+  userId: z
+    .string()
+    .min(1),
+}).strict();
