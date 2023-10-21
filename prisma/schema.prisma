@@ -41,6 +41,8 @@ model Direction {
   responses        Response[]
   specialization   Specialization @relation(fields: [specializationId], references: [id])
   specializationId Int
+  test             Test?          @relation(fields: [testId], references: [id])
+  testId           Int?
 }
 
 model Response {
@@ -57,9 +59,10 @@ model Response {
 }
 
 model Test {
-  id        Int        @id @default(autoincrement())
-  createdAt DateTime   @default(now())
+  id        Int         @id @default(autoincrement())
+  createdAt DateTime    @default(now())
   title     String
+  direction Direction[]
   tasks     Task[]
   answers   Answer[]
   response  Response[]
@@ -82,7 +85,7 @@ model Task {
 model Answer {
   id          Int          @id @default(autoincrement())
   createdAt   DateTime     @default(now())
-  answer      String
+  answer      String?
   test        Test         @relation(fields: [testId], references: [id])
   testId      Int
   taskAnswers TaskAnswer[]
