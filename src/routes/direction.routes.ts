@@ -5,7 +5,7 @@ import {
   GetMyDirectionsController,
 } from '../controllers/direction';
 
-export const chatRouter = (fastify: FastifyInstance, opts: any, next: (err?: Error) => void) => {
+export const directionRouter = (fastify: FastifyInstance, opts: any, next: (err?: Error) => void) => {
   fastify.get('/', GetDirectionsBySpecializationController);
 
   fastify.get('/:directionId', GetOneDirectionController);
