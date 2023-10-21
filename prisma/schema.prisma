@@ -71,6 +71,7 @@ model Task {
   testId                Int?
   type                  TaskType
   question              String
+  variants              String[]
   correctSingleAnswer   Int?
   correctMultipleAnswer Int[]
 }

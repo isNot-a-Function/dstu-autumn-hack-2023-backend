@@ -1,6 +1,10 @@
 import { z } from 'zod';
 
 export const CreateTaskSchema = z.object({
+  correctAnswer: z
+    .array(
+      z.number(),
+    ),
   question: z
     .string()
     .min(1),
@@ -11,4 +15,8 @@ export const CreateTaskSchema = z.object({
       'detailedResponse',
       'codeResponse',
     ]),
+  variants: z
+    .array(
+      z.string(),
+    ),
 }).strict();

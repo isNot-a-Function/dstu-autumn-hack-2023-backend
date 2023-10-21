@@ -11,7 +11,7 @@ import { ErrorReply } from '../../reply/error.reply';
 import { CreateTaskSchema } from './validator';
 import { ICreateTask } from './interface';
 
-export const UpdateUserController = async (
+export const CreateTaskController = async (
   req: FastifyRequest<{ Body: ICreateTask }>,
   reply: FastifyReply,
 ) => {
@@ -46,8 +46,11 @@ export const UpdateUserController = async (
 
     const task = await prisma.task.create({
       data: {
+        correctMultipleAnswer: data.type === 'multipleResponse' ? data.correctAnswer : undefined,
+        correctSingleAnswer: data.type === 'singleResponse' ? data.correctAnswer[0] : undefined,
         question: data.question,
         type: data.type,
+        variants: data.variants,
       },
     });
 

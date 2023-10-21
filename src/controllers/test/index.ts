@@ -9,9 +9,9 @@ import { ErrorReply } from '../../reply/error.reply';
 
 import { verifyAccessToken } from '../../integrations/jwt';
 import { ICreateTest } from './interface';
-import { CreateTestSchema } from './validator';
+import { CreateTestSchema, GetTestSchema } from './validator';
 
-export const StartChatingController = async (
+export const CreateTestController = async (
   req: FastifyRequest<{ Body: ICreateTest }>,
   reply: FastifyReply,
 ) => {
@@ -44,21 +44,57 @@ export const StartChatingController = async (
 
     const data = CreateTestSchema.parse(req.body);
 
-    // const newGroup = await prisma.test.create({
-    //   data: {
-    //     title: data.title,
-    //     tasks: {
-    //       connect: {
-    //         id:
-    //       }
-    //     }
-    //   },
-    // });
+    const newGroup = await prisma.test.create({
+      data: {
+        tasks: {
+          connect:
+            data.tasks.map((task) => ({ id: task })),
+        },
+        title: data.title,
+      },
+    });
 
     reply
       .status(SuccessReply.DataSendSuccessStatus)
       .send({
-        // group: newGroup,
+        group: newGroup,
+      });
+  } catch (error) {
+    if (error instanceof ZodError) {
+      logger.error(error.message);
+
+      reply
+        .status(ErrorReply.ValidationErrorStatus)
+        .send(ErrorReply.ValidationErrorMessage);
+    }
+
+    if (error instanceof Error) {
+      logger.error(error.message);
+
+      reply
+        .status(ErrorReply.BaseErrorStatus)
+        .send(error.message);
+    }
+  };
+};
+
+export const GetTestController = async (
+  req: FastifyRequest<{ Params: ICreateTest }>,
+  reply: FastifyReply,
+) => {
+  try {
+    const data = GetTestSchema.parse(req.params);
+
+    const test = await prisma.test.findUnique({
+      where: {
+        id: Number(data.testId),
+      },
+    });
+
+    reply
+      .status(SuccessReply.DataSendSuccessStatus)
+      .send({
+        test,
       });
   } catch (error) {
     if (error instanceof ZodError) {

@@ -12,6 +12,8 @@ import { authRouter } from './routes/auth.routes';
 import { chatRouter } from './routes/chat.routes';
 import { userRouter } from './routes/user.routes';
 import { directionRouter } from './routes/direction.routes';
+import { testRouter } from './routes/test.routes';
+import { taskRouter } from './routes/task.routes';
 
 const server = fastify();
 
@@ -76,6 +78,14 @@ export const startServer = async () => {
 
     await server.register(directionRouter, {
       prefix: '/api/direction',
+    });
+
+    await server.register(testRouter, {
+      prefix: '/api/test',
+    });
+
+    await server.register(taskRouter, {
+      prefix: '/api/task',
     });
 
     await server.ready().then(() => {
