@@ -15,6 +15,7 @@ import { directionRouter } from './routes/direction.routes';
 import { testRouter } from './routes/test.routes';
 import { taskRouter } from './routes/task.routes';
 import { responseRouter } from './routes/response.routes';
+import { answerRouter } from './routes/answer.routes';
 
 const server = fastify();
 
@@ -91,6 +92,10 @@ export const startServer = async () => {
 
     await server.register(responseRouter, {
       prefix: '/api/response',
+    });
+
+    await server.register(answerRouter, {
+      prefix: '/api/answer',
     });
 
     await server.ready().then(() => {
