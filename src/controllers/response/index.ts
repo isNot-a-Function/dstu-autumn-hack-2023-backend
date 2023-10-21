@@ -167,7 +167,7 @@ export const UserResponseController = async (
       return;
     }
 
-    const data = UserResponseSchema.parse(req.body);
+    const data = UserResponseSchema.parse(req.query);
 
     const response = await prisma.response.create({
       data: {

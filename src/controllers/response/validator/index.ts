@@ -19,5 +19,5 @@ export const VerdictResponseSchema = z.object({
 export const UserResponseSchema = z.object({
   directionId: z
     .string()
-    .optional(),
+    .min(1),
 }).strict();

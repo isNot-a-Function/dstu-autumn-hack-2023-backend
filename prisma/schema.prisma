@@ -18,7 +18,7 @@ model User {
   vkLink       String?
   phone        String?
   fullname     String?
-  logo         String?         @default("https://image.pngaaa.com/560/2546560-middle.png")
+  logo         String?         @default("https://www.svgrepo.com/show/404636/avatar-people-person-profile-user.svg")
   messages     Message[]
   groups       MessagerGroup[]
   responses    Response[]
