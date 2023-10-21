@@ -14,8 +14,8 @@ import { HASH_COIN } from '../../config';
 import { refreshTokenConfiguration } from '../../configuration';
 import { createRefreshToken, createToken, verifyRefreshToken } from '../../integrations/jwt';
 
-import { SignInSchema, SignUpSchema } from './auth.validator';
-import { ISignInUser, ISignUpUser } from './auth.interface';
+import { SignInSchema, SignUpSchema } from './validator/index.';
+import { ISignInUser, ISignUpUser } from './interface';
 
 export const SignUpUserController = async (req: FastifyRequest<{ Body: ISignUpUser }>, reply: FastifyReply) => {
   try {

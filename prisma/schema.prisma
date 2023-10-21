@@ -9,13 +9,112 @@ datasource db {
 }
 
 model User {
-  id           String       @id @default(uuid())
-  email        String       @unique
+  id           Int             @id @default(autoincrement())
+  createdAt    DateTime        @default(now())
+  email        String          @unique
   passwordHash String
-  role         UserRoleEnum @default(customer)
+  role         UserRoleEnum    @default(customer)
+  tgLink       String?
+  vkLink       String?
+  phone        String?
+  fullname     String?
+  logo         String?         @default("https://image.pngaaa.com/560/2546560-middle.png")
+  messages     Message[]
+  groups       MessagerGroup[]
+  responses    Response[]
+  answers      Answer[]
+}
+
+model Specialization {
+  id         Int         @id @default(autoincrement())
+  createdAt  DateTime    @default(now())
+  title      String
+  directions Direction[]
+}
+
+model Direction {
+  id               Int            @id @default(autoincrement())
+  createdAt        DateTime       @default(now())
+  title            String
+  description      String
+  responses        Response[]
+  specialization   Specialization @relation(fields: [specializationId], references: [id])
+  specializationId Int
+}
+
+model Response {
+  id          Int       @id @default(autoincrement())
+  createdAt   DateTime  @default(now())
+  text        String?
+  user        User      @relation(fields: [userId], references: [id])
+  userId      Int
+  direction   Direction @relation(fields: [directionId], references: [id])
+  directionId Int
+  tests       Test[]
+  answers     Answer[]
+}
+
+model Test {
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  title     String
+  tasks     Task[]
+  answers   Answer[]
+  response  Response[]
+}
+
+model Task {
+  id                    Int      @id @default(autoincrement())
+  createdAt             DateTime @default(now())
+  test                  Test     @relation(fields: [testId], references: [id])
+  testId                Int
+  type                  TaskType
+  question              String
+  correctSingleAnswer   Int?
+  correctMultipleAnswer Int[]
+}
+
+model Answer {
+  id        Int        @id @default(autoincrement())
+  createdAt DateTime   @default(now())
+  answer    String?
+  user      User       @relation(fields: [userId], references: [id])
+  userId    Int
+  test      Test       @relation(fields: [testId], references: [id])
+  testId    Int
+  response  Response[]
+}
+
+model MessagerGroup {
+  id        Int       @id @default(autoincrement())
+  createdAt DateTime  @default(now())
+  creatorId Int?
+  active    Boolean   @default(true)
+  title     String    @default(uuid())
+  icon      String    @default("https://vectips.com/wp-content/uploads/2020/08/tutorial-preview-large-1.png")
+  users     User[]
+  messages  Message[]
+}
+
+model Message {
+  id        Int           @id @default(autoincrement())
+  createdAt DateTime      @default(now())
+  text      String
+  files     String[]
+  sender    User          @relation(fields: [senderId], references: [id])
+  senderId  Int
+  group     MessagerGroup @relation(fields: [groupId], references: [id])
+  groupId   Int
 }
 
 enum UserRoleEnum {
   hr
   customer
+}
+
+enum TaskType {
+  singleResponse
+  multipleResponse
+  detailedResponse
+  codeResponse
 }

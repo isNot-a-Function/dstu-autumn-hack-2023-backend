@@ -22,4 +22,7 @@ export const ErrorReply = {
   TokenIsNotExistErrorStatus: 402,
 
   TokenIsInvalidErrorStatus: 401,
+
+  AccessDeniedErrorStatus: 400,
+  AccessDeniedErrorMessage: 'Ошибка доступа',
 };
