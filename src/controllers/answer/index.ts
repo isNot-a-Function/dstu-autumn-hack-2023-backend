@@ -32,35 +32,63 @@ export const SendAnswerController = async (
       return;
     }
 
-    // const data = SendAnswerSchema.parse(req.query);
+    const data = SendAnswerSchema.parse(req.query);
 
-    // const response = await prisma.response.findFirst({
-    //   where: {
-    //     userId: user.userId,
-    //     direction:
-    //   }
-    // })
+    const test = await prisma.test.findUnique({
+      select: {
+        tasks: true,
+      },
+      where: {
+        id: data.testId,
+      },
+    });
 
-    // const answer = await prisma.answer.create({
-    //   data: {
-    //     test: {
-    //       connect: {
-    //         id: data.testId,
-    //       },
-    //     },
-    //   },
-    // });
+    const response = await prisma.response.findFirst({
+      where: {
+        direction: {
+          id: data.directionId,
+        },
+        userId: user.userId,
+      },
+    });
 
-    // const directions = await prisma.answer.create({
-    //   data:
+    const taskAnswers: {
+      answer: string;
+      taskId: number;
+      userId: any;
+  }[] = await data.answers.map((task, index) => {
+    return {
+      answer: task.toString(),
+      taskId: test!.tasks[index + 1].id,
+      userId: user.userId,
+    };
+  });
 
-    // });
+    const answer = await prisma.answer.create({
+      data: {
+        response: {
+          connect: {
+            id: response?.id,
+          },
+        },
+        taskAnswers: {
+          createMany: {
+            data: taskAnswers,
+          },
+        },
+        test: {
+          connect: {
+            id: data.testId,
+          },
+        },
+      },
+    });
 
-    // reply
-    //   .status(SuccessReply.DataSendSuccessStatus)
-    //   .send({
-    //     directions,
-    //   });
+    reply
+      .status(SuccessReply.DataSendSuccessStatus)
+      .send({
+        message: 'Ваши ответы отправленны, результат вы можете посмотреть через некоторое время в профиле',
+      });
   } catch (error) {
     if (error instanceof ZodError) {
       logger.error(error.message);
@@ -79,43 +107,3 @@ export const SendAnswerController = async (
     }
   };
 };
-
-// export const GetOneDirectionController = async (
-//   req: FastifyRequest<{ Params: IGetOneDirection }>,
-//   reply: FastifyReply,
-// ) => {
-//   try {
-//     const data = GetOneDirectionSchema.parse(req.params);
-
-//     const direction = await prisma.direction.findUnique({
-//       include: {
-//         specialization: true,
-//       },
-//       where: {
-//         id: Number(data.directionId),
-//       },
-//     });
-
-//     reply
-//       .status(SuccessReply.DataSendSuccessStatus)
-//       .send({
-//         direction,
-//       });
-//   } catch (error) {
-//     if (error instanceof ZodError) {
-//       logger.error(error.message);
-
-//       reply
-//         .status(ErrorReply.ValidationErrorStatus)
-//         .send(ErrorReply.ValidationErrorMessage);
-//     }
-
-//     if (error instanceof Error) {
-//       logger.error(error.message);
-
-//       reply
-//         .status(ErrorReply.BaseErrorStatus)
-//         .send(error.message);
-//     }
-//   };
-// };
