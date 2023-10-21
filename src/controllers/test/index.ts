@@ -86,6 +86,19 @@ export const GetTestController = async (
     const data = GetTestSchema.parse(req.params);
 
     const test = await prisma.test.findUnique({
+      select: {
+        createdAt: true,
+        id: true,
+        tasks: {
+          select: {
+            id: true,
+            question: true,
+            type: true,
+            variants: true,
+          },
+        },
+        title: true,
+      },
       where: {
         id: Number(data.testId),
       },
