@@ -175,11 +175,8 @@ export const SignInUserController = async (req: FastifyRequest<{ Body: ISignInUs
 
 export const RefreshTokenController = async (req: FastifyRequest, reply: FastifyReply) => {
   try {
-    console.log('req.cookies.refreshToken', req.cookies.refreshToken);
     if (req.cookies.refreshToken) {
       const verifyToken = verifyRefreshToken(req.cookies.refreshToken);
-
-      console.log('verifyToken', verifyToken);
 
       if (typeof verifyToken === 'string') {
         reply
@@ -194,8 +191,6 @@ export const RefreshTokenController = async (req: FastifyRequest, reply: Fastify
         },
       });
 
-      console.log('findUser', findUser);
-
       if (!findUser) {
         reply
           .status(ErrorReply.EmailValidationErrorStatus);
@@ -205,9 +200,6 @@ export const RefreshTokenController = async (req: FastifyRequest, reply: Fastify
 
       const accessToken = createToken(findUser);
       const refreshToken = createRefreshToken(findUser);
-
-      console.log('accessToken', accessToken);
-      console.log('refreshToken', refreshToken);
 
       reply
         .status(SuccessReply.RefreshTokenSuccessStatus)
