@@ -22,7 +22,7 @@ model User {
   messages     Message[]
   groups       MessagerGroup[]
   responses    Response[]
-  answers      Answer[]
+  answers      TaskAnswer[]
 }
 
 model Specialization {
@@ -80,22 +80,25 @@ model Task {
 }
 
 model Answer {
-  id        Int        @id @default(autoincrement())
-  createdAt DateTime   @default(now())
-  answer    String
-  user      User       @relation(fields: [userId], references: [id])
-  userId    Int
-  test      Test       @relation(fields: [testId], references: [id])
-  testId    Int
-  response  Response[]
+  id          Int          @id @default(autoincrement())
+  createdAt   DateTime     @default(now())
+  answer      String
+  test        Test         @relation(fields: [testId], references: [id])
+  testId      Int
+  taskAnswers TaskAnswer[]
+  response    Response[]
 }
 
 model TaskAnswer {
-  id      Int    @id @default(autoincrement())
-  answer  String
-  verdict Int?
-  task    Task   @relation(fields: [taskId], references: [id])
-  taskId  Int
+  id            Int    @id @default(autoincrement())
+  answer        String
+  verdict       Int?
+  answerModel   Answer @relation(fields: [answerModelId], references: [id])
+  answerModelId Int
+  task          Task   @relation(fields: [taskId], references: [id])
+  taskId        Int
+  user          User   @relation(fields: [userId], references: [id])
+  userId        Int
 }
 
 model MessagerGroup {

@@ -3,7 +3,7 @@ import z from 'zod';
 export const GetResponsesSchema = z.object({
   specialization: z
     .string()
-    .min(1),
+    .optional(),
   type: z
     .enum(['internship', 'practice']),
 }).strict();

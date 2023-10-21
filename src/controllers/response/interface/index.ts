@@ -2,7 +2,7 @@ import { $Enums } from '@prisma/client';
 
 export interface IGetResponses {
   type: $Enums.DirectionType;
-  specialization: string;
+  specialization?: string;
 }
 
 export interface IVerdictResponse {
