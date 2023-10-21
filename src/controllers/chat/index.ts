@@ -48,6 +48,10 @@ export const StartChatingController = async (
 
     const data = StartChatingSchema.parse(req.body);
 
+    console.log('Ids', [{ id: user.userId }, { id: data.userId }]);
+
+    console.log('user', user);
+
     const newGroup = await prisma.messagerGroup.create({
       data: {
         creatorId: user.userId,
