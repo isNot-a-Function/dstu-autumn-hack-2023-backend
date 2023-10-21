@@ -65,6 +65,7 @@ export const StartChatingController = async (
       .status(SuccessReply.DataSendSuccessStatus)
       .send({
         group: newGroup,
+        message: 'Группа для переписки создана. Перейдите в чат',
       });
   } catch (error) {
     if (error instanceof ZodError) {
