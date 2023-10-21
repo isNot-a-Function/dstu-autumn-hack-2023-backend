@@ -32,44 +32,35 @@ export const SendAnswerController = async (
       return;
     }
 
-    const data = SendAnswerSchema.parse(req.query);
+    // const data = SendAnswerSchema.parse(req.query);
 
-    const test = await prisma.test.findUnique({
-      where: {
-        id: data.testId,
-      },
-      select: {
-        response: true
-      }
-    })
+    // const response = await prisma.response.findFirst({
+    //   where: {
+    //     userId: user.userId,
+    //     direction:
+    //   }
+    // })
 
-    const response = await prisma.response.findFirst({
-      where: {
-        userId: user.userId,
-        direction:
-      }
-    })
-
-    const answer = await prisma.answer.create({
-      data: {
-        test: {
-          connect: {
-            id: data.testId,
-          },
-        },
-      },
-    });
+    // const answer = await prisma.answer.create({
+    //   data: {
+    //     test: {
+    //       connect: {
+    //         id: data.testId,
+    //       },
+    //     },
+    //   },
+    // });
 
     // const directions = await prisma.answer.create({
     //   data:
 
     // });
 
-    reply
-      .status(SuccessReply.DataSendSuccessStatus)
-      .send({
-        directions,
-      });
+    // reply
+    //   .status(SuccessReply.DataSendSuccessStatus)
+    //   .send({
+    //     directions,
+    //   });
   } catch (error) {
     if (error instanceof ZodError) {
       logger.error(error.message);
