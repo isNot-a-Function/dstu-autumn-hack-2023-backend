@@ -83,7 +83,7 @@ export const GetTasksController = async (
   reply: FastifyReply,
 ) => {
   try {
-    const data = GetTasksSchema.parse(req.body);
+    const data = GetTasksSchema.parse(req.query);
 
     const tasks = await prisma.task.findMany({
       where: {
