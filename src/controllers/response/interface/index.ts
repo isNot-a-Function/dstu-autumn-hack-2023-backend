@@ -13,3 +13,7 @@ export interface IVerdictResponse {
 export interface IUserResponse {
   directionId: string;
 }
+
+export interface IGetUserResponses {
+  userId: string
+}

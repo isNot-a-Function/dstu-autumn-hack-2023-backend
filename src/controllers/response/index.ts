@@ -6,8 +6,86 @@ import prisma from '../../prisma';
 import { ErrorReply } from '../../reply/error.reply';
 import { SuccessReply } from '../../reply/success.reply';
 import { verifyAccessToken } from '../../integrations/jwt';
-import { IGetResponses, IUserResponse, IVerdictResponse } from './interface';
-import { GetResponsesSchema, UserResponseSchema, VerdictResponseSchema } from './validator';
+import { IGetResponses, IGetUserResponses, IUserResponse, IVerdictResponse } from './interface';
+import { GetResponsesSchema, GetUserResponsesSchema, UserResponseSchema, VerdictResponseSchema } from './validator';
+
+export const GetUserResponsesController = async (
+  req: FastifyRequest<{ Params: IGetUserResponses }>,
+  reply: FastifyReply,
+) => {
+  try {
+    if (!req.headers.authorization) {
+      reply
+        .status(ErrorReply.TokenIsNotExistErrorStatus);
+
+      return;
+    }
+
+    const user = verifyAccessToken(req.headers.authorization);
+
+    if (typeof user === 'string') {
+      reply
+        .status(ErrorReply.TokenIsInvalidErrorStatus);
+
+      return;
+    }
+
+    if (user.role !== 'hr') {
+      reply
+        .status(ErrorReply.AccessDeniedErrorStatus)
+        .send({
+          message: ErrorReply.AccessDeniedErrorMessage,
+        });
+
+      return;
+    }
+
+    const data = GetUserResponsesSchema.parse(req.params);
+
+    const responses = await prisma.user.findUnique({
+      include: {
+        responses: {
+          include: {
+            tests: {
+              include: {
+                answers: {
+                  include: {
+                    taskAnswers: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+      where: {
+        id: Number(data.userId),
+      },
+    });
+
+    reply
+      .status(SuccessReply.DataSendSuccessStatus)
+      .send({
+        responses,
+      });
+  } catch (error) {
+    if (error instanceof ZodError) {
+      logger.error(error.message);
+
+      reply
+        .status(ErrorReply.ValidationErrorStatus)
+        .send(ErrorReply.ValidationErrorMessage);
+    }
+
+    if (error instanceof Error) {
+      logger.error(error.message);
+
+      reply
+        .status(ErrorReply.BaseErrorStatus)
+        .send(error.message);
+    }
+  };
+};
 
 export const GetResponsesController = async (
   req: FastifyRequest<{ Querystring: IGetResponses }>,

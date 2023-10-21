@@ -21,3 +21,9 @@ export const UserResponseSchema = z.object({
     .string()
     .min(1),
 }).strict();
+
+export const GetUserResponsesSchema = z.object({
+  userId: z
+    .string()
+    .min(1),
+}).strict();
