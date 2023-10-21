@@ -47,6 +47,7 @@ model Response {
   id          Int       @id @default(autoincrement())
   createdAt   DateTime  @default(now())
   text        String?
+  verdict     String?
   user        User      @relation(fields: [userId], references: [id])
   userId      Int
   direction   Direction @relation(fields: [directionId], references: [id])
@@ -65,26 +66,36 @@ model Test {
 }
 
 model Task {
-  id                    Int      @id @default(autoincrement())
-  createdAt             DateTime @default(now())
-  test                  Test?    @relation(fields: [testId], references: [id])
+  id                    Int          @id @default(autoincrement())
+  createdAt             DateTime     @default(now())
+  test                  Test?        @relation(fields: [testId], references: [id])
   testId                Int?
   type                  TaskType
   question              String
   variants              String[]
   correctSingleAnswer   Int?
   correctMultipleAnswer Int[]
+  code                  String?
+  taskAnswers           TaskAnswer[]
 }
 
 model Answer {
   id        Int        @id @default(autoincrement())
   createdAt DateTime   @default(now())
-  answer    String?
+  answer    String
   user      User       @relation(fields: [userId], references: [id])
   userId    Int
   test      Test       @relation(fields: [testId], references: [id])
   testId    Int
   response  Response[]
+}
+
+model TaskAnswer {
+  id      Int    @id @default(autoincrement())
+  answer  String
+  verdict Int?
+  task    Task   @relation(fields: [taskId], references: [id])
+  taskId  Int
 }
 
 model MessagerGroup {
