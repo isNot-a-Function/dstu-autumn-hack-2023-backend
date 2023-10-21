@@ -1,18 +1,18 @@
-import { FastifyReply, FastifyRequest } from 'fastify';
+import { FastifyRequest, FastifyReply } from 'fastify';
 import { ZodError } from 'zod';
 
-import { logger } from '../../log';
 import prisma from '../../prisma';
+
+import { verifyAccessToken } from '../../integrations/jwt';
+import { logger } from '../../log';
 
 import { SuccessReply } from '../../reply/success.reply';
 import { ErrorReply } from '../../reply/error.reply';
+import { CreateTaskSchema } from './validator';
+import { ICreateTask } from './interface';
 
-import { verifyAccessToken } from '../../integrations/jwt';
-import { ICreateTest } from './interface';
-import { CreateTestSchema } from './validator';
-
-export const StartChatingController = async (
-  req: FastifyRequest<{ Body: ICreateTest }>,
+export const UpdateUserController = async (
+  req: FastifyRequest<{ Body: ICreateTask }>,
   reply: FastifyReply,
 ) => {
   try {
@@ -42,23 +42,19 @@ export const StartChatingController = async (
       return;
     }
 
-    const data = CreateTestSchema.parse(req.body);
+    const data = CreateTaskSchema.parse(req.body);
 
-    const newGroup = await prisma.test.create({
+    const task = await prisma.task.create({
       data: {
-        title: data.title,
-        tasks: {
-          connect: {
-            id: 
-          }
-        }
+        question: data.question,
+        type: data.type,
       },
     });
 
     reply
       .status(SuccessReply.DataSendSuccessStatus)
       .send({
-        group: newGroup,
+        task,
       });
   } catch (error) {
     if (error instanceof ZodError) {

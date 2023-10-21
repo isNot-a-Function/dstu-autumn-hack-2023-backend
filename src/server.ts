@@ -53,7 +53,7 @@ export const startServer = async () => {
 
     await server.register(fastifyMultipart, {
       limits: {
-        fileSize: 1 * 1024 * 1024 * 32,
+        fileSize: 1 * 1024 * 1024 * 64,
         files: 5,
       },
     });
