@@ -123,7 +123,11 @@ export const GetMyDirectionsController = async (
         responses: {
           include: {
             answers: true,
-            direction: true,
+            direction: {
+              include: {
+                specialization: true,
+              },
+            },
             tests: true,
           },
         },
