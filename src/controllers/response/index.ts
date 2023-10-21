@@ -187,6 +187,7 @@ export const UserResponseController = async (
     reply
       .status(SuccessReply.DataSendSuccessStatus)
       .send({
+        message: 'Вы записаны',
         response,
       });
   } catch (error) {
