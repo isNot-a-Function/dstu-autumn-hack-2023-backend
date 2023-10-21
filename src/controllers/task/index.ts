@@ -8,8 +8,8 @@ import { logger } from '../../log';
 
 import { SuccessReply } from '../../reply/success.reply';
 import { ErrorReply } from '../../reply/error.reply';
-import { CreateTaskSchema } from './validator';
-import { ICreateTask } from './interface';
+import { CreateTaskSchema, GetTasksSchema } from './validator';
+import { ICreateTask, IGetTasks } from './interface';
 
 export const CreateTaskController = async (
   req: FastifyRequest<{ Body: ICreateTask }>,
@@ -58,6 +58,43 @@ export const CreateTaskController = async (
       .status(SuccessReply.DataSendSuccessStatus)
       .send({
         task,
+      });
+  } catch (error) {
+    if (error instanceof ZodError) {
+      logger.error(error.message);
+
+      reply
+        .status(ErrorReply.ValidationErrorStatus)
+        .send(ErrorReply.ValidationErrorMessage);
+    }
+
+    if (error instanceof Error) {
+      logger.error(error.message);
+
+      reply
+        .status(ErrorReply.BaseErrorStatus)
+        .send(error.message);
+    }
+  };
+};
+
+export const GetTasksController = async (
+  req: FastifyRequest<{ Querystring: IGetTasks }>,
+  reply: FastifyReply,
+) => {
+  try {
+    const data = GetTasksSchema.parse(req.body);
+
+    const tasks = await prisma.task.findMany({
+      where: {
+        type: data.type,
+      },
+    });
+
+    reply
+      .status(SuccessReply.DataSendSuccessStatus)
+      .send({
+        tasks,
       });
   } catch (error) {
     if (error instanceof ZodError) {

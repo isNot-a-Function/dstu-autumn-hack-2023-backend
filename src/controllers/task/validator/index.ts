@@ -20,3 +20,13 @@ export const CreateTaskSchema = z.object({
       z.string(),
     ),
 }).strict();
+
+export const GetTasksSchema = z.object({
+  type: z
+    .enum([
+      'singleResponse',
+      'multipleResponse',
+      'detailedResponse',
+      'codeResponse',
+    ]),
+}).strict();
