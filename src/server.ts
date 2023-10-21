@@ -3,13 +3,14 @@ import cors from '@fastify/cors';
 import cookie from '@fastify/cookie';
 import fastifyMultipart from '@fastify/multipart';
 
-import { chatRouter } from 'routes/chat.routes';
 import { COOKIE_SECRET, SERVER_HOST, SERVER_PORT } from './config';
 import { logger } from './log';
 import { whitelistCORS } from './configuration';
 
 import { fileRouter } from './routes/file.routes';
 import { authRouter } from './routes/auth.routes';
+import { chatRouter } from './routes/chat.routes';
+import { userRouter } from './routes/user.routes';
 
 const server = fastify();
 
@@ -66,6 +67,10 @@ export const startServer = async () => {
 
     await server.register(chatRouter, {
       prefix: '/api/chat',
+    });
+
+    await server.register(userRouter, {
+      prefix: '/api/user',
     });
 
     await server.ready().then(() => {
