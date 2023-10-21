@@ -130,6 +130,21 @@ export const GetUserController = async (
     const data = GetUserSchema.parse(req.params);
 
     const user = await prisma.user.findUnique({
+      include: {
+        responses: {
+          include: {
+            tests: {
+              include: {
+                answers: {
+                  include: {
+                    taskAnswers: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
       where: {
         id: Number(data.userId),
       },
