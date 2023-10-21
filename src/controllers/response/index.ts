@@ -44,7 +44,11 @@ export const GetResponsesController = async (
 
     const responses = await prisma.response.findMany({
       include: {
-        direction: true,
+        direction: {
+          include: {
+            specialization: true,
+          },
+        },
         user: true,
       },
       where: {
