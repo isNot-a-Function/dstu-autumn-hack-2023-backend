@@ -185,11 +185,15 @@ export const RefreshTokenController = async (req: FastifyRequest, reply: Fastify
         return;
       }
 
+      console.log('verifyToken', verifyToken);
+
       const findUser = await prisma.user.findUnique({
         where: {
           id: verifyToken.userId,
         },
       });
+
+      console.log('findUser', findUser);
 
       if (!findUser) {
         reply
@@ -206,9 +210,6 @@ export const RefreshTokenController = async (req: FastifyRequest, reply: Fastify
 
       reply
         .status(SuccessReply.RefreshTokenSuccessStatus)
-        .send({
-          token: accessToken,
-        })
         .cookie('refreshToken', refreshToken,
           {
             httpOnly: refreshTokenConfiguration.httpOnly,
@@ -216,7 +217,10 @@ export const RefreshTokenController = async (req: FastifyRequest, reply: Fastify
             sameSite: refreshTokenConfiguration.sameSite,
             secure: refreshTokenConfiguration.secure,
           },
-        );
+        )
+        .send({
+          token: accessToken,
+        });
     }
   } catch (error) {
     if (error instanceof Error) {
