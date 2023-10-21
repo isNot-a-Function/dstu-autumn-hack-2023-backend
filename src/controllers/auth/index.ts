@@ -175,8 +175,11 @@ export const SignInUserController = async (req: FastifyRequest<{ Body: ISignInUs
 
 export const RefreshTokenController = async (req: FastifyRequest, reply: FastifyReply) => {
   try {
+    console.log('req.cookies.refreshToken', req.cookies.refreshToken);
     if (req.cookies.refreshToken) {
       const verifyToken = verifyRefreshToken(req.cookies.refreshToken);
+
+      console.log('verifyToken', verifyToken);
 
       if (typeof verifyToken === 'string') {
         reply
@@ -184,8 +187,6 @@ export const RefreshTokenController = async (req: FastifyRequest, reply: Fastify
 
         return;
       }
-
-      console.log('verifyToken', verifyToken);
 
       const findUser = await prisma.user.findUnique({
         where: {
