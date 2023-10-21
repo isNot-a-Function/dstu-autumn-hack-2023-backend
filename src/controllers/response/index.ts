@@ -43,6 +43,10 @@ export const GetResponsesController = async (
     const data = GetResponsesSchema.parse(req.query);
 
     const responses = await prisma.response.findMany({
+      include: {
+        direction: true,
+        user: true,
+      },
       where: {
         direction: {
           specialization: data.specialization
@@ -53,7 +57,6 @@ export const GetResponsesController = async (
           type: data.type,
         },
       },
-
     });
 
     reply
