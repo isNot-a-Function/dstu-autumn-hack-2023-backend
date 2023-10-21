@@ -4,7 +4,7 @@ import {
   SignInUserController,
   SignUpUserController,
   RefreshTokenController,
-} from '../controllers/auth/auth.controller';
+} from '../controllers/auth';
 
 export const authRouter = (fastify: FastifyInstance, opts: any, next: (err?: Error) => void) => {
   fastify.post('/signup', SignUpUserController);
