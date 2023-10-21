@@ -201,8 +201,14 @@ export const RefreshTokenController = async (req: FastifyRequest, reply: Fastify
       const accessToken = createToken(findUser);
       const refreshToken = createRefreshToken(findUser);
 
+      console.log('accessToken', accessToken);
+      console.log('refreshToken', refreshToken);
+
       reply
         .status(SuccessReply.RefreshTokenSuccessStatus)
+        .send({
+          token: accessToken,
+        })
         .cookie('refreshToken', refreshToken,
           {
             httpOnly: refreshTokenConfiguration.httpOnly,
@@ -210,10 +216,7 @@ export const RefreshTokenController = async (req: FastifyRequest, reply: Fastify
             sameSite: refreshTokenConfiguration.sameSite,
             secure: refreshTokenConfiguration.secure,
           },
-        )
-        .send({
-          token: accessToken,
-        });
+        );
     }
   } catch (error) {
     if (error instanceof Error) {
