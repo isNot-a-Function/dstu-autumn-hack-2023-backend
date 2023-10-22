@@ -35,6 +35,8 @@ export const SendAnswerController = async (
 
     const data = SendAnswerSchema.parse(req.body);
 
+    console.log('data', data);
+
     const test = await prisma.test.findUnique({
       select: {
         tasks: true,
@@ -44,6 +46,8 @@ export const SendAnswerController = async (
       },
     });
 
+    console.log('test', test);
+
     const response = await prisma.response.findFirst({
       where: {
         direction: {
@@ -52,6 +56,8 @@ export const SendAnswerController = async (
         userId: user.userId,
       },
     });
+
+    console.log('response', response);
 
     const taskAnswers: {
       answer: string;
@@ -64,6 +70,8 @@ export const SendAnswerController = async (
       userId: user.userId,
     };
   });
+
+    console.log('taskAnswers', taskAnswers);
 
     const answer = await prisma.answer.create({
       data: {
@@ -92,6 +100,8 @@ export const SendAnswerController = async (
         },
       },
     });
+
+    console.log('answer', answer);
 
     // Вызов ф-ции проверки
     TestAnswers(answer);
