@@ -32,7 +32,7 @@ export const SendAnswerController = async (
       return;
     }
 
-    const data = SendAnswerSchema.parse(req.query);
+    const data = SendAnswerSchema.parse(req.body);
 
     const test = await prisma.test.findUnique({
       select: {
