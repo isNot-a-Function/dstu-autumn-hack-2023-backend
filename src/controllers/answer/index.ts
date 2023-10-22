@@ -66,7 +66,7 @@ export const SendAnswerController = async (
   }[] = await data.answers.map((task, index) => {
     return {
       answer: task.toString(),
-      taskId: test!.tasks[index + 1].id,
+      taskId: test!.tasks[index].id,
       userId: user.userId,
     };
   });
