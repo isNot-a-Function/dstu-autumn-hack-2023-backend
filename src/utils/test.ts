@@ -65,7 +65,7 @@ export const TestAnswers = async (answer: {
 };
 // Define a function for processing singleResponse tasks
 function processSingleResponseTask (task: any, relevantTaskAnswer: any) {
-  return task.correctSingleAnswer === relevantTaskAnswer.verdict;
+  return task.correctSingleAnswer === JSON.parse(relevantTaskAnswer.answer);
 }
 
 // Define a function for processing multipleResponse tasks
@@ -137,12 +137,12 @@ const sampleData = {
   id: 1,
   taskAnswers: [
     {
-      answer: '4',
+      answer: '2',
       answerModelId: 1,
       id: 1,
       taskId: 1,
       userId: 3,
-      verdict: 2,
+      verdict: null,
     },
     {
       answer: '[2,7]',
