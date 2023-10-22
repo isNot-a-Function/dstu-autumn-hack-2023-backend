@@ -102,8 +102,10 @@ async function runCompiledJavaCode (): Promise<string> {
 // }
 //     `;
 
-export async function evaluateTasks (code:string, tasksData) {
+export async function evaluateTasks (code: string, tasksData) {
   for (const taskData of tasksData) {
+    console.log(code);
+    console.log(taskData);
     const javaCode = code.replace('array_for_test', `${taskData.input.join(', ')}`);
 
     try {
@@ -113,10 +115,10 @@ export async function evaluateTasks (code:string, tasksData) {
 
       const executionResult = await runCompiledJavaCode();
 
-      // console.log('Execution Result:', executionResult);
+      console.log('Execution Result:', executionResult);
 
       // Сравните результат выполнения с ожидаемым "output"
-      if (!(executionResult.trim() === taskData.output)) {
+      if ((executionResult.trim() !== taskData.output)) {
         return false;
       }
     } catch (error) {

@@ -11,7 +11,7 @@
     "build": "tsc",
     "start": "node ./dist/index.js",
     "dev": "tsnd --respawn ./src/index.ts",
-    "alg": "tsnd ./src/algoritms/java_parser.ts",
+    "alg": "tsnd ./src/utils/test.ts",
     "generate:prisma": "prisma generate",
     "migrate:up": "npx prisma migrate deploy",
     "migrate:dev": "npx prisma migrate dev"
