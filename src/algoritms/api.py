@@ -12,9 +12,7 @@ app = FastAPI()
 class MessageDefinitionType(BaseModel):
     content: str
 
-class MessageQuestionType(BaseModel):
-    question: str
-    answer: str
+
 
 
 @app.post("/get_answer_by_ai_by_definition")
@@ -29,7 +27,10 @@ async def get_by_definition(data: MessageDefinitionType):
 
     return(json_data)
 
-
+class MessageQuestionType(BaseModel):
+    question: str
+    answer: str
+    
 @app.post("/get_answer_by_ai_message_by_question")
 async def get_by_question(data: MessageQuestionType):
 
