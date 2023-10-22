@@ -1,5 +1,5 @@
 import { $Enums } from '@prisma/client';
-import { evaluateTasks } from 'algoritms/java_parser';
+import { evaluateTasks } from '../algoritms/java_parser';
 
 const axios = require('axios');
 
@@ -42,19 +42,19 @@ export const TestAnswers = async (answer: {
     // Determine the task type
     switch (task.type) {
       case $Enums.TaskType.singleResponse:
-        processSingleResponseTask(task, relevantTaskAnswer);
+        console.log(processSingleResponseTask(task, relevantTaskAnswer));
         break;
 
       case $Enums.TaskType.multipleResponse:
-        processMultipleResponseTask(task, relevantTaskAnswer);
+        console.log(processMultipleResponseTask(task, relevantTaskAnswer));
         break;
 
       case $Enums.TaskType.detailedResponse:
-        processDetailedResponseTask(task, relevantTaskAnswer);
+        console.log(await processDetailedResponseTask(task, relevantTaskAnswer));
         break;
 
       case $Enums.TaskType.codeResponse:
-        processCodeResponseTask(task, relevantTaskAnswer);
+        console.log(await processCodeResponseTask(task, relevantTaskAnswer));
         break;
 
       default:
@@ -78,8 +78,9 @@ function processMultipleResponseTask (task: any, relevantTaskAnswer: any) {
 // Define a function for processing detailedResponse tasks
 async function processDetailedResponseTask (task, relevantTaskAnswer) {
   const data = {
-    answer: relevantTaskAnswer.answer,
     question: task.question,
+    // eslint-disable-next-line perfectionist/sort-objects
+    answer: relevantTaskAnswer.answer,
   };
 
   // URL вашего FastAPI-эндпоинта
@@ -92,7 +93,7 @@ async function processDetailedResponseTask (task, relevantTaskAnswer) {
     // Обрабатываем ответ
     if (response.status === 200) {
       // Здесь можно обработать результат, который вернул сервер
-      return response.data.ai_answer;
+      return JSON.parse(response.data).ai_answer;
     }
     // Обработка ошибок
     console.error(`HTTP Error: ${response.status}`);
@@ -107,6 +108,7 @@ async function processDetailedResponseTask (task, relevantTaskAnswer) {
 // Define a function for processing codeResponse tasks
 async function processCodeResponseTask (task: any, relevantTaskAnswer: any) {
   // Вызываем функцию evaluateTasks, передавая relevantTaskAnswer.answer и task.code
+
   const taskData = JSON.parse(task.code);
 
   return evaluateTasks(relevantTaskAnswer.answer, taskData);
@@ -129,3 +131,110 @@ function arraysEqual (arr1, arr2) {
 
   return true;
 }
+const sampleData = {
+  answer: 'Sample answer',
+  createdAt: new Date('2023-10-22T10:00:00Z'),
+  id: 1,
+  taskAnswers: [
+    {
+      answer: '4',
+      answerModelId: 1,
+      id: 1,
+      taskId: 1,
+      userId: 3,
+      verdict: 2,
+    },
+    {
+      answer: '[2,7]',
+      answerModelId: 1,
+      id: 1,
+      taskId: 2,
+      userId: 3,
+      verdict: null,
+    },
+    {
+
+      // eslint-disable-next-line max-len
+      answer: 'Сериализация и десериализация - это процессы, используемые в Java (и многих других языках программирования) для сохранения объектов в поток байтов',
+      answerModelId: 1,
+      id: 1,
+      taskId: 3,
+      userId: 3,
+      verdict: null,
+    },
+    {
+      // eslint-disable-next-line max-len
+      answer: 'public class Task {\n  public static void main(String[] args) {\n    double[] numbers = {array_for_test};\n    long product = calculateOddProduct(numbers[0], numbers[1]);\n\n    System.out.println("Multiply of [" + numbers[0] + ", " + numbers[1] + "]: " + product);\n  }\n\n  public static long calculateOddProduct(int start, int end) {\n    long product = 1;\n    for (int i = start; i <= end; i++) {\n      if (i % 2 != 0) { // Проверка на нечетное число\n        product *= i;\n      }\n    }\n    return product;\n  }\n}',
+      answerModelId: 1,
+      id: 1,
+      taskId: 4,
+      userId: 4,
+      verdict: null,
+    },
+  ],
+  test: {
+    createdAt: new Date('2023-10-21T14:30:00Z'),
+    id: 2,
+    tasks: [
+      {
+        code: null,
+        correctMultipleAnswer: [],
+        correctSingleAnswer: 2,
+        createdAt: new Date('2023-10-21T14:45:00Z'),
+        id: 1,
+        question: 'What is 2 + 2?',
+        testId: null,
+        type: $Enums.TaskType.singleResponse,
+        variants: ['3', '4', '5'],
+      },
+      {
+        code: null,
+        correctMultipleAnswer: [2, 7],
+        correctSingleAnswer: null,
+        createdAt: new Date('2023-10-21T15:15:00Z'),
+        id: 2,
+        question: 'Select all prime numbers:',
+        testId: null,
+        type: $Enums.TaskType.multipleResponse,
+        variants: ['2', '4', '7', '9'],
+      },
+      {
+        code: null,
+        correctMultipleAnswer: [2, 7],
+        correctSingleAnswer: null,
+        createdAt: new Date('2023-11-21T15:15:00Z'),
+        id: 3,
+        question: 'Что такое сериализация и десериализация объектов в Java?',
+        testId: null,
+        type: $Enums.TaskType.detailedResponse,
+        variants: ['2', '4', '7', '9'],
+      },
+      {
+
+        // eslint-disable-next-line max-len
+        code: '[{"input":[5,10,15,20,-1],"output":"Mean score: 12.50"},{"input":[7,3,-2],"output":"Mean score: 5.00"}]',
+        correctMultipleAnswer: [2, 7],
+        correctSingleAnswer: null,
+        createdAt: new Date('2023-12-21T15:15:00Z'),
+        id: 4,
+        // eslint-disable-next-line max-len
+        question: 'Написать программу для подсчета среднего значения чисел, введенных пользователем, до первого отрицательного числа',
+        testId: null,
+        type: $Enums.TaskType.codeResponse,
+        variants: ['2', '4', '7', '9'],
+      },
+    ],
+    title: 'Sample Test',
+  },
+  testId: 2,
+};
+
+TestAnswers(sampleData)
+  .then((result) => {
+    // Обработка результата, если функция возвращает Promise
+    console.log(result);
+  })
+  .catch((error) => {
+    // Обработка ошибки, если функция возвращает Promise и произошла ошибка
+    console.error(error);
+  });
