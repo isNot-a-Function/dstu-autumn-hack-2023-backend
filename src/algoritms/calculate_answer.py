@@ -41,8 +41,8 @@ def get_answer_by_ai_message_by_question(question, answer):
 def get_answer_by_ai_by_definition(message):
     g4f.logging = False  # enable logging
     g4f.check_version = False  # Disable automatic version checking
-    print(g4f.version)  # check version
-    print(g4f.Provider.Ails.params)  # supported args
+    # print(g4f.version)  # check version
+    # print(g4f.Provider.Ails.params)  # supported args
 
     definition = translate_to_english(message)
     # Automatic selection of provider

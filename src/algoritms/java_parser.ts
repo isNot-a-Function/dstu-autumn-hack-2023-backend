@@ -104,8 +104,6 @@ async function runCompiledJavaCode (): Promise<string> {
 
 export async function evaluateTasks (code: string, tasksData) {
   for (const taskData of tasksData) {
-    console.log(code);
-    console.log(taskData);
     const javaCode = code.replace('array_for_test', `${taskData.input.join(', ')}`);
 
     try {
