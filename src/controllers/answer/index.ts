@@ -103,6 +103,8 @@ export const SendAnswerController = async (
 
     console.log('answer', answer);
 
+    console.log('tests', answer.test);
+
     // Вызов ф-ции проверки
     TestAnswers(answer);
 
