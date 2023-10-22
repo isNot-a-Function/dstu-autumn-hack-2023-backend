@@ -104,6 +104,15 @@ export const GetTestController = async (
       },
     });
 
+    const order = ['singleResponse', 'multipleResponse', 'detailedResponse', 'codeResponse'];
+
+    test && test.tasks.sort((taskA, taskB) => {
+      const indexA = order.indexOf(taskA.type);
+      const indexB = order.indexOf(taskB.type);
+
+      return indexA - indexB;
+    });
+
     reply
       .status(SuccessReply.DataSendSuccessStatus)
       .send({
