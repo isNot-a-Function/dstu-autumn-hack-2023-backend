@@ -1,7 +1,6 @@
 import { $Enums } from '@prisma/client';
+import axios from 'axios';
 import { evaluateTasks } from '../algoritms/java_parser';
-
-const axios = require('axios');
 
 export const TestAnswers = async (answer: {
   test: {
@@ -42,19 +41,19 @@ export const TestAnswers = async (answer: {
     // Determine the task type
     switch (task.type) {
       case $Enums.TaskType.singleResponse:
-        console.log(processSingleResponseTask(task, relevantTaskAnswer));
+        processSingleResponseTask(task, relevantTaskAnswer);
         break;
 
       case $Enums.TaskType.multipleResponse:
-        console.log(processMultipleResponseTask(task, relevantTaskAnswer));
+        processMultipleResponseTask(task, relevantTaskAnswer);
         break;
 
       case $Enums.TaskType.detailedResponse:
-        console.log(await processDetailedResponseTask(task, relevantTaskAnswer));
+        await processDetailedResponseTask(task, relevantTaskAnswer);
         break;
 
       case $Enums.TaskType.codeResponse:
-        console.log(await processCodeResponseTask(task, relevantTaskAnswer));
+        await processCodeResponseTask(task, relevantTaskAnswer);
         break;
 
       default:
@@ -84,7 +83,7 @@ async function processDetailedResponseTask (task, relevantTaskAnswer) {
   };
 
   // URL вашего FastAPI-эндпоинта
-  const url = 'http://127.0.0.1:8000/get_answer_by_ai_message_by_question';
+  const url = 'https://nikko-develop.space/get_answer_by_ai_message_by_question';
 
   try {
     // Выполняем POST-запрос с использованием axios
