@@ -8,6 +8,7 @@ import { ErrorReply } from '../../reply/error.reply';
 
 import { logger } from '../../log';
 import { verifyAccessToken } from '../../integrations/jwt';
+import { TestAnswers } from '../../utils/test';
 import { ISendAnswer } from './interface';
 import { SendAnswerSchema } from './validator';
 
@@ -82,7 +83,18 @@ export const SendAnswerController = async (
           },
         },
       },
+      include: {
+        taskAnswers: true,
+        test: {
+          include: {
+            tasks: true,
+          },
+        },
+      },
     });
+
+    // Вызов ф-ции проверки
+    TestAnswers(answer);
 
     reply
       .status(SuccessReply.DataSendSuccessStatus)
