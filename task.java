@@ -1,20 +1,27 @@
+
+    public class Task {
+      public static void main(String[] args) {
+          int[] numbers = {-10}; // Пример массива для тестирования
   
-public class Task {
-  public static void main(String[] args) {
-      int [] numbers = {10, 20};
-      long product = calculateOddProduct(numbers[0] , numbers[1]);
-
-      System.out.println("Multiply of [" + numbers[0]+ ", " + numbers[1]+ "]: " + product);
-  }
-
-  public static long calculateOddProduct(int start, int end) {
-      long product = 1;
-      for (int i = start; i <= end; i++) {
-          if (i % 2 != 0) { // Проверка на нечетное число
-              product *= i;
+          int sum = 0;
+          int count = 0;
+  
+          for (int number : numbers) {
+              if (number < 0) {
+                  break;
+              }
+  
+              sum += number;
+              count++;
           }
+  
+          if (count > 0) {
+              double average = (double) sum / count;
+              System.out.printf("Mean score: %.2f", average);
+          } else {
+              System.out.println("Its Empty");
+          }
+          System.out.println();
       }
-      return product;
-  }
-}
+  }  
     

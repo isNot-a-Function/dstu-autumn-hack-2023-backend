@@ -35,7 +35,6 @@ async function runCompiledJavaCode (): Promise<string> {
   return stdout; // Execution successful
 }
 
-// Пример использования
 // const javaCode = `
 // public class Task {    public static void main(String[] args) {
 //   int[] numbers = {5, 8, 13, 21, 34, 55, 89};
@@ -54,57 +53,47 @@ async function runCompiledJavaCode (): Promise<string> {
 //   })
 //   .then((executionResult) => {
 //     console.log('Execution Result:', executionResult);
-//   })
+//   });
 //   .catch((error) => {
 //     console.error('Error:', error);
 //   });
 const tasksData1 = [
-  {
-    input: [1, 10],
-    output: 'Sum 1 to 10, multiplicity 3 or 5: 33',
-  },
-  {
-    input: [5, 15],
-    output: 'Sum 5 to 15, multiplicity 3 or 5: 68',
-  },
-  {
-    input: [2, 8],
-    output: 'Sum 2 to 8, multiplicity 3 or 5: 14',
-  },
-  {
-    input: [-3, 3],
-    output: 'Sum -3 to 3, multiplicity 3 or 5: 0',
-  },
-  {
-    input: [10, 20],
-    output: 'Sum 10 to 20, multiplicity 3 or 5: 98',
-  },
+  { input: [5, 10, 15, 20, -1], output: 'Mean score: 12,50' },
+  { input: [7, 3, -2], output: 'Mean score: 5,00' },
+  { input: [0, 0, 0, -1], output: 'Mean score: 0,00' },
+  { input: [100, 200, 300, 400, 500, -5], output: 'Mean score: 300,00' },
+  { input: [-10], output: 'Its Empty' },
 ];
 
-const javaCode1 = `  
-public class Task {
-  public static void main(String[] args) {
-      int [] numbers = {array_for_test};
-      long product = calculateOddProduct(numbers[0] , numbers[1]);
-
-      System.out.println("Multiply of [" + numbers[0]+ ", " + numbers[1]+ "]: " + product);
-  }
-
-  public static long calculateOddProduct(int start, int end) {
-      long product = 1;
-      for (int i = start; i <= end; i++) {
-          if (i % 2 != 0) { // Проверка на нечетное число
-              product *= i;
+async function evaluateTasks () {
+  for (const taskData of tasksData1) {
+    const javaCode = `
+    public class Task {
+      public static void main(String[] args) {
+          int[] numbers = {${taskData.input.join(', ')}}; // Пример массива для тестирования
+  
+          int sum = 0;
+          int count = 0;
+  
+          for (int number : numbers) {
+              if (number < 0) {
+                  break;
+              }
+  
+              sum += number;
+              count++;
           }
+  
+          if (count > 0) {
+              double average = (double) sum / count;
+              System.out.printf("Mean score: %.2f", average);
+          } else {
+              System.out.println("Its Empty");
+          }
+          System.out.println();
       }
-      return product;
-  }
-}
+  }  
     `;
-
-async function evaluateTasks (code:string, tasksData) {
-  for (const taskData of tasksData) {
-    const javaCode = code.replace('array_for_test', `${taskData.input.join(', ')}`);
 
     try {
       const compileResult = await compileAndSaveJavaCode(javaCode);
@@ -127,4 +116,4 @@ async function evaluateTasks (code:string, tasksData) {
   }
 }
 
-evaluateTasks(javaCode1, tasksData1);
+evaluateTasks();
