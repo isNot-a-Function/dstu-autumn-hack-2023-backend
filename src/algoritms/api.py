@@ -38,7 +38,7 @@ async def get_by_question(data: MessageQuestionType):
     # Создаем экземпляр RootModel из данных
     print(data.question, data.answer)
     result = get_answer_by_ai_message_by_question(data.question, data.answer)
-    print(result)
+    print("Hello its:", result)
     data = {"ai_answer": result}
     json_data = json.dumps(data)
 
