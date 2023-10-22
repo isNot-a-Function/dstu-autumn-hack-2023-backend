@@ -16,7 +16,7 @@ jobs:
         key: ${{ secrets.PRIVATE_KEY }}
         port: 22
         script: |
-          cd ~/workspace/dstu-autumn-hack-2023-backend/
+          cd /home/nikko/workspace/dstu-autumn-hack-2023/dstu-autumn-hack-2023-backend/
           git pull origin master
           git status
           npm install --only=prod
