@@ -157,7 +157,11 @@ export const GetUserController = async (
               include: {
                 answers: {
                   include: {
-                    taskAnswers: true,
+                    taskAnswers: {
+                      include: {
+                        task: true,
+                      },
+                    },
                   },
                 },
               },
