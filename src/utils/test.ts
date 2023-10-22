@@ -1,5 +1,6 @@
 import { $Enums } from '@prisma/client';
 import { evaluateTasks } from '../algoritms/java_parser';
+import prisma from '../prisma';
 
 const axios = require('axios');
 
@@ -42,19 +43,47 @@ export const TestAnswers = async (answer: {
     // Determine the task type
     switch (task.type) {
       case $Enums.TaskType.singleResponse:
-        console.log(processSingleResponseTask(task, relevantTaskAnswer));
+        if (relevantTaskAnswer !== undefined) {
+          if ((processSingleResponseTask(task, relevantTaskAnswer))) {
+            await updateTaskAnswer(relevantTaskAnswer?.id, 1);
+          } else {
+            await updateTaskAnswer(relevantTaskAnswer?.id, 0);
+          }
+        }
+
         break;
 
       case $Enums.TaskType.multipleResponse:
-        console.log(processMultipleResponseTask(task, relevantTaskAnswer));
+
+        if (relevantTaskAnswer !== undefined) {
+          if ((processMultipleResponseTask(task, relevantTaskAnswer))) {
+            await updateTaskAnswer(relevantTaskAnswer?.id, 1);
+          } else {
+            await updateTaskAnswer(relevantTaskAnswer?.id, 0);
+          }
+        }
         break;
 
       case $Enums.TaskType.detailedResponse:
-        console.log(await processDetailedResponseTask(task, relevantTaskAnswer));
+
+        if (relevantTaskAnswer !== undefined) {
+          if ((await processDetailedResponseTask(task, relevantTaskAnswer))) {
+            await updateTaskAnswer(relevantTaskAnswer?.id, 1);
+          } else {
+            await updateTaskAnswer(relevantTaskAnswer?.id, 0);
+          }
+        }
         break;
 
       case $Enums.TaskType.codeResponse:
-        console.log(await processCodeResponseTask(task, relevantTaskAnswer));
+        if (relevantTaskAnswer !== undefined) {
+          if ((await processCodeResponseTask(task, relevantTaskAnswer))) {
+            await updateTaskAnswer(relevantTaskAnswer?.id, 1);
+          } else {
+            await updateTaskAnswer(relevantTaskAnswer?.id, 0);
+          }
+        }
+
         break;
 
       default:
@@ -63,6 +92,23 @@ export const TestAnswers = async (answer: {
     }
   }
 };
+
+async function updateTaskAnswer (taskAnswerId: number, verdict: number) {
+  try {
+    const updatedTaskAnswer = await prisma.taskAnswer.update({
+      data: {
+        verdict,
+      },
+      where: {
+        id: taskAnswerId,
+      },
+    });
+
+    console.log('status 200:', updatedTaskAnswer);
+  } catch (error) {
+    console.error('status 400:', error);
+  }
+}
 // Define a function for processing singleResponse tasks
 function processSingleResponseTask (task: any, relevantTaskAnswer: any) {
   return task.correctSingleAnswer === JSON.parse(relevantTaskAnswer.answer);
