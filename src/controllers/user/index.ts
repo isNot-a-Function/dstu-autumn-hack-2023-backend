@@ -93,6 +93,26 @@ export const GetMeController = async (
     }
 
     const data = await prisma.user.findUnique({
+      include: {
+        answers: {
+          include: {
+            answerModel: {
+              include: {
+                taskAnswers: {
+                  include: {
+                    task: true,
+                  },
+                },
+              },
+            },
+          },
+        },
+        responses: {
+          include: {
+            direction: true,
+          },
+        },
+      },
       where: {
         id: user.userId,
       },
